@@ -1,0 +1,76 @@
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Juan Dela Cruz",
+  "email": "juan@gmail.com",
+  "password": "password123",
+  "location": "Iloilo"
+}
+
+### Login Request
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "juan@gmail.com",
+  "password": "password123"
+}
+
+### Protected Route (Test without token)
+GET http://localhost:3000/users/profile
+
+### Protected Route (Test with token)
+GET http://localhost:3000/users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiRmFybWVyIiwiaWF0IjoxNzkzNDU1MzEwLCJleHAiOjE3OTM1NDE3MTB9.qSrFOrj2CdlriLUA5US0mGM3vRmfN3mME--8IS7dx6M
+
+### 1. Create a Crop
+POST http://localhost:3000/crops
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiRmFybWVyIiwiaWF0IjoxNzkzNDU3MDgxLCJleHAiOjE3OTM1NDM0ODF9.tk9YfC7zk1kQybKt4y6IjpMz0uH-iQqN0rIpLsWlIS8
+
+{
+  "cropType": "Rice",
+  "plantingDate": "2026-10-15",
+  "location": "Iloilo"
+}
+
+### 2. Get All My Crops
+GET http://localhost:3000/crops
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiRmFybWVyIiwiaWF0IjoxNzkzNDU2MDY5LCJleHAiOjE3OTM1NDI0Njl9.XugoC5V4YTWcjCZKG3tWZoGIyV5yNTWL23nMAsz_p00
+
+### 3. Update Crop Status (PATCH)
+PATCH http://localhost:3000/crops/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiRmFybWVyIiwiaWF0IjoxNzkzNDU2MzM0LCJleHAiOjE3OTM1NDI3MzR9.h6XVgGNyqGn-MsZxLE3siTU_ZQW8ZfRB9oUTS_y9nN4
+
+{
+  "status": "Harvested"
+}
+
+### 4. Delete Crop (DELETE)
+DELETE http://localhost:3000/crops/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiRmFybWVyIiwiaWF0IjoxNzkzNDU2MzM0LCJleHAiOjE3OTM1NDI3MzR9.h6XVgGNyqGn-MsZxLE3siTU_ZQW8ZfRB9oUTS_y9nN4
+
+### Generate Advisory (Rule Engine)
+POST http://localhost:3000/advisories/generate/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiRmFybWVyIiwiaWF0IjoxNzkzNDU3MTc2LCJleHAiOjE3OTM1NDM1NzZ9.2cOJqYZEKAC2tU8zW51HPUipBndvj1Lz2uxM3NuzFXY
+
+### Get Advisory History
+GET http://localhost:3000/advisories
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiRmFybWVyIiwiaWF0IjoxNzkzNDU3MTc2LCJleHAiOjE3OTM1NDM1NzZ9.2cOJqYZEKAC2tU8zW51HPUipBndvj1Lz2uxM3NuzFXYnpm install --legacy-peer-deps
+
+### Register Admin Account
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+### Register Admin Account
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Farm Admin",
+  "email": "admin@gmail.com",
+  "password": "admin123",
+  "location": "Admin Office"
+}
