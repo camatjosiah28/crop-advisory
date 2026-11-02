@@ -4,7 +4,6 @@ import axios from 'axios';
 
 export default function Crops() {
   const [crops, setCrops] = useState<any[]>([]);
-  // Nilagyan natin ng default value na 'Rice'
   const [formData, setFormData] = useState({ cropType: 'Rice', plantingDate: '', location: '' });
   const [snackbar, setSnackbar] = useState({ show: false, message: '', type: 'success' });
 
@@ -39,9 +38,9 @@ export default function Crops() {
       await axios.post('http://localhost:3000/crops', formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setFormData({ cropType: 'Rice', plantingDate: '', location: '' }); // Reset
+      setFormData({ cropType: 'Rice', plantingDate: '', location: '' });
       showSnackbar('Crop added successfully!', 'success');
-      fetchCrops();
+      fetchCrops(); // I-refresh yung listahan
     } catch (err) { 
       showSnackbar('Failed to add crop.', 'error'); 
     }
@@ -52,14 +51,15 @@ export default function Crops() {
       await axios.post(`http://localhost:3000/advisories/generate/${cropId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      showSnackbar('Advisory generated! Check your dashboard.', 'success');
+      // Snackbar lang, walang redirect
+      showSnackbar('Advisory generated! Check Weather or Dashboard page.', 'success');
     } catch (err) { 
       showSnackbar('Failed to generate advisory.', 'error'); 
     }
   };
 
   return (
-    <div className="relative p-6 max-w-6xl mx-auto">
+    <div className="relative p-6 max-w-6xl mx-auto min-h-screen">
       
       {/* SNACKBAR COMPONENT */}
       <div 

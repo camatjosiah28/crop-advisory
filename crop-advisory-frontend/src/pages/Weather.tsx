@@ -4,6 +4,7 @@ import axios from 'axios';
 
 export default function Weather() {
   const [advisories, setAdvisories] = useState<any[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -16,29 +17,41 @@ export default function Weather() {
   }, [token, navigate]);
 
   const fetchAdvisories = async () => {
+    setIsRefreshing(true);
     try {
       const res = await axios.get('http://localhost:3000/advisories', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAdvisories(res.data);
     } catch (err) { console.error(err); }
+    setIsRefreshing(false);
   };
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-800">Weather Advisory</h1>
-        <p className="text-gray-500">Monitor weather risks and generated advisories for your crops.</p>
+      <div className="flex flex-col md:flex-row justify-between md:items-end mb-8 gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-gray-800">Weather Advisory</h1>
+          <p className="text-gray-500">Monitor weather risks and generated advisories for your crops.</p>
+        </div>
+        
+        {/* REFRESH BUTTON */}
+        <button 
+          onClick={fetchAdvisories} 
+          disabled={isRefreshing}
+          className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition flex items-center gap-2 disabled:opacity-50 w-fit"
+        >
+          <svg className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+          {isRefreshing ? 'Refreshing...' : 'Refresh'}
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        {/* MOCK WEATHER WIDGET (Pang-display lang) */}
+        {/* MOCK WEATHER WIDGET */}
         <div className="bg-white p-6 rounded-xl shadow-md border-t-4 border-blue-500 h-fit md:col-span-1">
           <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-            </svg>
+            <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>
             Local Forecast
           </h2>
           <div className="text-center py-6 bg-blue-50 rounded-lg">
@@ -47,7 +60,7 @@ export default function Weather() {
             <p className="text-sm text-gray-500 mt-2">Humidity: 82%</p>
             <p className="text-sm text-gray-500">Wind: 12 km/h</p>
           </div>
-          <p className="text-xs text-gray-400 text-center mt-4 italic">*Mock data for demonstration. Live API integration coming soon.</p>
+          <p className="text-xs text-gray-400 text-center mt-4 italic">*Mock data for demonstration.</p>
         </div>
 
         {/* ADVISORY HISTORY LIST */}
@@ -57,7 +70,7 @@ export default function Weather() {
           {advisories.length === 0 ? (
             <div className="text-center py-10">
               <p className="text-gray-400 italic">No advisories generated yet.</p>
-              <button onClick={() => navigate('/crops')} className="mt-4 text-blue-600 font-bold hover:underline">
+              <button onClick={() => navigate('/crops')} className="mt-4 text-green-600 font-bold hover:underline">
                 Go to My Crops to generate one
               </button>
             </div>

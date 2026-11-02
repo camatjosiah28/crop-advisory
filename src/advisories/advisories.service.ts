@@ -15,11 +15,16 @@ export class AdvisoriesService {
 
   async generateAdvisory(cropId: number, userId: number) {
     const crop = await this.cropsRepository.findOne({
-      where: { cropId, user: { userId } },
+      where: { cropId: Number(cropId) },
+      relations: { user: true }, // <--- NAKA-OBJECT FORMAT NA
     });
 
     if (!crop) {
-      throw new NotFoundException('Crop not found');
+      throw new NotFoundException('Crop not found in database');
+    }
+
+    if (crop.user.userId !== Number(userId)) {
+       throw new NotFoundException('This crop does not belong to you');
     }
 
     const today = new Date();
@@ -43,38 +48,27 @@ export class AdvisoriesService {
         advisoryType = 'Irrigation Reminder';
         riskLevel = 'Medium';
         message = `High heat (${mockWeather.temperature}°C) expected. Rice needs constant water. Maintain 2-3cm water level in your paddy.`;
-      } else if (crop.cropType === 'Tomato' || crop.cropType === 'Eggplant') {
-        advisoryType = 'Heat Stress Alert';
-        riskLevel = 'High';
-        message = `Extreme heat (${mockWeather.temperature}°C) can cause flower drop in ${crop.cropType}. Water deeply early morning and use mulch.`;
       } else {
         advisoryType = 'Irrigation Reminder';
         riskLevel = 'Medium';
         message = `High heat (${mockWeather.temperature}°C) expected. Irrigate your ${crop.cropType} early morning or late afternoon.`;
       }
     }
-    else if (mockWeather.rainfall > 20 && mockWeather.rainfall <= 50) {
-      if (crop.cropType === 'Corn') {
-         advisoryType = 'Pest Warning';
-         riskLevel = 'Medium';
-         message = `Moderate rain and humidity may attract Fall Armyworms in your Corn. Inspect leaves regularly.`;
-      }
-    }
 
     const newAdvisory = this.advisoriesRepository.create({
-      crop,
+      crop: crop,
       advisoryType,
       riskLevel,
       message,
     });
 
-    return this.advisoriesRepository.save(newAdvisory);
+    return await this.advisoriesRepository.save(newAdvisory);
   }
 
   async getHistory(userId: number) {
     return this.advisoriesRepository.find({
-      where: { crop: { user: { userId } } },
-      relations: ['crop'] as any,
+      where: { crop: { user: { userId: Number(userId) } } },
+      relations: { crop: true }, // <--- NAKA-OBJECT FORMAT NA
       order: { createdAt: 'DESC' },
     });
   }
